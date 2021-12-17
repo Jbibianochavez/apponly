@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Home</title>
+    {%load static%}
+    <link rel="stylesheet" href="{% static 'style-sheet.css'%} ">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.1/dist/chart.min.js"></script>
+</head>
+   {% block nav %}
+   <div class="topnav">
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'checkin' %}">Check In</a>
+      {% if user.is_authenticated %} 
+      <a href="{% url 'add' %}">Add Devices</a>
+      <a href="{% url 'checkout' %}">Check Out</a>
+      <a href="/logout/">Logout</a>
+      {% if request.user.is_authenticated and request.user.is_staff %}
+      <a href="/admin/">Admin</a>
+      {% endif %}
+      {% else %}
+      <a href="/login/">Login here</a>
+      {% endif %}
+    </div>
+   {% endblock %}
+   
+<body>
+    {% if request.user.is_authenticated and request.user.is_staff %}
+    <div class="master" id="form">     
+{% block title %}Create an Account{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <form method="POST" class="form-group">
+	{% csrf_token %}
+	{{ form|crispy }}
+	<button type="submit" class="btn btn-success">Register</button>
+    </form>
+{% endblock %}
+{% else %}
+<p>Please contact the Administrator to register a new user.</p>
+{% endif %}
+</div>
+</body>
